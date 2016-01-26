@@ -1,8 +1,9 @@
  #-------------------------------------------------------------------------------
 # Name:         ENSC_Capstone_ShopSmart_GUI.py
-# Purpose:      This script looks for a text file which gets updated every single time
-# 				user scans a tag next to a rfid reader. Then it displays the content of the
-#				text file by looking for that file every 100ms.
+# Purpose:      This script looks for a text file which gets updated
+#               every single time user scans a tag next to a rfid reader.
+#               Then it displays the content of the	text file by looking
+#               for that file every 100ms.
 #               
 #              
 #              
