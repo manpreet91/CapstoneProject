@@ -1,13 +1,14 @@
  #-------------------------------------------------------------------------------
 # Name:         ENSC_Capstone_ShopSmart_GUI.py
 # Purpose:      This script looks for a text file which gets updated every single time
-# 				user scans a tag next to a rfid reader. Then it displays the content of the text file by looking for that file every 100ms.
+# 				user scans a tag next to a rfid reader. Then it displays the content of the
+#				text file by looking for that file every 100ms.
 #               
 #              
 #              
 #
 # 
-# Author:	   Manpreet Singh    (301128525)
+# Author:	  	Manpreet Singh    (301128525)
 # Created:     12-10-2015
 # Copyright:   ShopSmart 2015
 # 
