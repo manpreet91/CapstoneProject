@@ -1,8 +1,9 @@
 /*
-1. This file demonstrates the creation of the text file containing the shopping list items and how it is transferred to the embedded system
+1. This file is a part of Capstone project Android app called ShopSmart. 
+1. This file demonstrates the creation of the text file containing the shopping list items and how it is transferred to the embedded system (beaglebone black)
 2. A function called FinalSelection() is called when user hits the button to save selected items from the UI in a text file.
 3. This text file gets store on the SD storage of the smartphone
-4. Once the file is stored, it uses FTP class and treats the smartphone as a client and embedded system on the shopping cart as a server.
+4. Once the file is stored, it uses FTP class and establishes the communication between smartphone (client) and beaglebone black (server)
 5. ftptesting() is called when user is ready to transfer the file.
 
 Note: Some section of the code is intentionally missing to make it more readable
@@ -36,31 +37,7 @@ public class SecondActivity extends AppCompatActivity {
     //declaring an array
     ArrayList<String> selection = new ArrayList<String>();
 
-    //declaring object for Text view (to cross check if items are added correctly)
-    TextView final_text;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        setContentView(R.layout.activity_second);
-        final_text = (TextView) findViewById(R.id.final_result);  //dummy to be removed
-        final_text.setEnabled(false);
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-
-
+	//Items available as a list 
     public void selectItem(View view)
     {
         boolean checked = ((CheckBox) view).isChecked();
@@ -98,7 +75,7 @@ public class SecondActivity extends AppCompatActivity {
         }
     }
 
-    //Create text file for shopping list
+    //Create text file containig the items selected by the user.
     //Author: Manpreet Singh and Jashan Dhaliwal
     public void FinalSelection (View view) {
         String FinalList = "";
@@ -133,39 +110,10 @@ public class SecondActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "System Error. Please use the Cart Display.", Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_second, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void transferToBeagleBone(View view) {
-        ftptesting();
-        Toast.makeText(getApplicationContext(),"List exported successfully",Toast.LENGTH_LONG).show();
-    }
-
-    //FTP communication
-    //Author: Manpreet Singh
-
-    public void ftptesting()
+	
+	//Author: Manpreet Singh
+	//Function to transfer the text file from smartphone to embedded system on the shopping cart
+	public void ftptesting()
     {
         AsyncTask< String, Integer, Boolean > task = new AsyncTask< String, Integer, Boolean >()
         {
@@ -176,6 +124,7 @@ public class SecondActivity extends AppCompatActivity {
                 Boolean result = Boolean.FALSE;
                 try {
                     FTPClient mFTPClient = new FTPClient();
+					//ipaddress same for server and client
                     mFTPClient.connect("192.168.43.157", 21);
 
                     if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
@@ -209,7 +158,7 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             } catch (Exception e) {
                                 String log = e.getMessage();
-                                Log.d("Errorrrr: ", log);
+                                Log.d("Error: ", log);
                             }
 
                         }
@@ -231,25 +180,36 @@ public class SecondActivity extends AppCompatActivity {
         task.execute("");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Second Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://shopsmartltd.shopsmart/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_second, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void transferToBeagleBone(View view) {
+        ftptesting();
+        Toast.makeText(getApplicationContext(),"List exported successfully",Toast.LENGTH_LONG).show();
+    }
+
+  
 
 
 }
